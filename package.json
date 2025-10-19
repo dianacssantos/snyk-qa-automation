@@ -1,0 +1,26 @@
+{
+  "name": "snyk-qa-automation",
+  "version": "1.0.0",
+  "description": "##  Snyk Cova Automated Tests This repository contains E2E automated tests for **login** and **user management** functionalities of **Cova** application.",
+  "main": "cypress.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dianacssantos/snyk-qa-automation.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dianacssantos/snyk-qa-automation/issues"
+  },
+  "homepage": "https://github.com/dianacssantos/snyk-qa-automation#readme",
+  "devDependencies": {  
+    "cypress": "^14.5.4",
+    "mochawesome": "^7.1.4",
+    "mochawesome-merge": "^5.0.0",
+    "mochawesome-report-generator": "^6.3.0"
+  }
+}
