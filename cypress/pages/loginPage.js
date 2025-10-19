@@ -26,6 +26,11 @@ class LoginPage {
     this.selectors.passwordInput().clear().type(password);
     this.selectors.loginButton().click();
   }
+
+  validate_form_is_invalid() {
+    this.selectors.usernameInput().should("have.attr", "required");
+    this.selectors.passwordInput().should("have.attr", "required");
+  }
 }
 
 export default new LoginPage();
