@@ -3,3 +3,4 @@ cypress/screenshots/
 cypress/videos/
 cypress/downloads/
 cypress/fixtures/credentials.json
+cypress.env.json
