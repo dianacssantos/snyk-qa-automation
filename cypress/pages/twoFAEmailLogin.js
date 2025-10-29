@@ -1,0 +1,59 @@
+class TwoFAEmailLogin {
+  elements = {
+    enterLogin: () => cy.get("#link-login-2fa-email"),
+    emailInput: () => cy.get('#email'),
+    passwordInput: () => cy.get('#password'),
+    loginButton: () => cy.get('button[type="submit"]'),
+    errorMessage: () => cy.get('.card.bg-danger.text-white.shadow', { timeout: 1000 }),
+    userProfileLink: () => cy.get('#userDropdown')
+  }
+
+  emailErrorSelector  = "#email"
+
+  visit() {
+    this.elements.enterLogin().click();
+  }
+
+  getUserProfile() {
+    this.elements.userProfileLink().click();
+  }
+
+  validateEmptyFields() {
+    this.elements.loginButton().click();
+    this.elements.emailInput().then(($input) => {
+      expect($input[0].validationMessage).to.contain("Please fill in");
+    });
+    this.elements.passwordInput().then(($input) => {
+      expect($input[0].validationMessage).to.contain("Please fill in");
+    });
+  }
+
+  fillCredentials(email, password) {
+    if (email) this.elements.emailInput().clear().type(email);
+    if (password) this.elements.passwordInput().clear().type(password);
+    return this;
+  }
+
+  submit(username, password) {
+    // if (username !== "") {
+    //   this.elements.usernameInput().type(username);
+    // }
+    // if (password !== "") {
+    //   this.elements.passwordInput().type(password);
+    // }
+    this.elements.loginButton().click();
+  }
+
+  assertError(message) {
+    cy.assertErrorMessage(this.errorBox, message);
+  }
+
+  assertNoError() {
+    cy.assertNoErrorMessage(this.errorBox);
+  }
+  
+  validateBrowserErrors(message) {
+    cy.validateBrowserMessages(this.emailErrorSelector, message);
+  }
+}
+export default new TwoFAEmailLogin();
