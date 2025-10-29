@@ -9,6 +9,7 @@ class TwoFAEmailLogin {
   }
 
   emailErrorSelector  = "#email"
+  passErrorSelector  = "#password"
 
   visit() {
     this.elements.enterLogin().click();
@@ -29,8 +30,11 @@ class TwoFAEmailLogin {
   }
 
   fillCredentials(email, password) {
-    if (email) this.elements.emailInput().clear().type(email);
-    if (password) this.elements.passwordInput().clear().type(password);
+    const cleanedEmailBox = this.elements.emailInput().clear();
+    const cleanedPasswordBox = this.elements.passwordInput().clear();
+
+    if (email) cleanedEmailBox.type(email);
+    if (password) cleanedPasswordBox.type(password);
     return this;
   }
 
@@ -54,6 +58,8 @@ class TwoFAEmailLogin {
   
   validateBrowserErrors(message) {
     cy.validateBrowserMessages(this.emailErrorSelector, message);
+    cy.validateBrowserMessages(this.passErrorSelector, message);
+
   }
 }
 export default new TwoFAEmailLogin();

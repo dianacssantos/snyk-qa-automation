@@ -36,10 +36,13 @@ class Auth0LoginPage {
       "https://dev-r2c3iyx2vbmmovdt.us.auth0.com",
       { args: { email, password } },
       ({ email, password }) => {
-        if (email) cy.get("#username").clear().type(email);
+        cy.get("#username").clear();
+        cy.get("#password").clear();
+
+        if (email) cy.get("#username").type(email);;
         if (password) {
-          cy.get("#password").clear().type(password, { log: false });
-          cy.get('button[data-action="toggle"]').click(); // show password
+          cy.get("#password").type(password);
+          cy.get('button[data-action="toggle"]').click(); 
         }
       }
     );
@@ -56,12 +59,16 @@ class Auth0LoginPage {
     );
   }
 
-  assertError(message, selector) {
+  assertError(message, selectors) {
     cy.origin(
       this.auth0Origin,
-      { args: { message, selector } },
-      ({ message, selector }) => {
-        cy.get(selector)
+      { args: { message, selectors } },
+      ({ message, selectors }) => {
+        const selectorQuery = Array.isArray(selectors)
+          ? selectors.join(", ")
+          : selectors;
+  
+        cy.get(selectorQuery, { timeout: 10000 })
           .should("be.visible")
           .invoke("text")
           .then((actualText) => {
@@ -71,6 +78,7 @@ class Auth0LoginPage {
       }
     );
   }
+  
 
   assertBlockedAccount(message) {
     cy.origin(

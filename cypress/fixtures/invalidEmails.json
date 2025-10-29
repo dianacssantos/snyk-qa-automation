@@ -1,42 +1,42 @@
 {
   "invalidEmails": [
     {
-      "email": "thisuser2",
+      "email": "thisuserme",
       "expectedMessage": "include an '@'" ,
       "description": "Missing @ symbol - basic email structure validation"
     },
     {
-      "email": "thisuser2@",
+      "email": "thisuserme@",
       "expectedMessage": "enter a part following '@'",
       "description": "Incomplete email - missing domain after @ symbol"
     },
     {
-      "email": "thisuser2@@domain",
+      "email": "thisuserme@@domain",
       "expectedMessage": "should not contain the symbol '@'",
       "description": "Multiple @ symbols - invalid email syntax"
     },
     {
-      "email": "thisuser2@domain",
+      "email": "thisuserme@domain",
       "expectedMessage": "include a '.'" ,
       "description": "Missing top-level domain - no dot in domain part"
     },
     {
-      "email": "user2@domain.",
+      "email": "thisuserme@domain.",
       "expectedMessage": "wrong position",
       "description": "Trailing dot - dot at end of domain without TLD"
     },
     {
-      "email": "user2@-domain",
+      "email": "thisuserme@-domain",
       "expectedMessage": "enter an email address",
       "description": "Hyphen at domain start - invalid domain name format"
     },
     {
-      "email": ".user2@domain.com",
+      "email": ".thisuserme@domain.com",
       "expectedMessage": "enter an email address",
       "description": "Leading dot in local part - invalid local section format"
     },
     {
-      "email": "u..ser2@domain.com",
+      "email": "this..erme@domain.com",
       "expectedMessage": "enter an email address",
       "description": "Consecutive dots in local part - invalid character sequence"
     }

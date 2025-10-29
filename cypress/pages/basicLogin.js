@@ -1,17 +1,18 @@
 class BasicLogin {
-  
   elements = {
     enterLogin: () => cy.get("#link-login"),
-    usernameInput: () => cy.get('#username'),
-    passwordInput: () => cy.get('#password'),
+    usernameInput: () => cy.get("#username"),
+    passwordInput: () => cy.get("#password"),
     loginButton: () => cy.get('button[type="submit"]'),
-    captchaTextBox: () => cy.get('#captcha_value'),
-    captchaImg: () => cy.get('#captcha_img'),
-    userProfileLink: () => cy.get('#userDropdown'),
+    captchaTextBox: () => cy.get("#captcha_value"),
+    captchaImg: () => cy.get("#captcha_img"),
+    userProfileLink: () => cy.get("#userDropdown"),
     errorMessage: () => cy.get(".card.bg-danger.text-white.shadow"),
-  }
+  };
 
   errorBox = ".card.bg-danger";
+  userErrorSelector  = "#username"
+  passErrorSelector  = "#password"
 
   visit() {
     this.elements.enterLogin().click();
@@ -32,10 +33,14 @@ class BasicLogin {
   }
 
   fillCredentials(username, password) {
-    if (username) this.elements.usernameInput().clear().type(username);
-    if (password) this.elements.passwordInput().clear().type(password);
+    const cleanedUsernameBox = this.elements.usernameInput().clear();
+    const cleanedPasswordBox = this.elements.passwordInput().clear();
+
+    if (username) cleanedUsernameBox.type(username);
+    if (password) cleanedPasswordBox.type(password);
     return this;
   }
+
 
   submit() {
     // if (username !== "") {
@@ -51,9 +56,14 @@ class BasicLogin {
     cy.assertErrorMessage(this.errorBox, message);
   }
 
-  assertNoError() {
+  assertNoAppError() {
     cy.assertNoErrorMessage(this.errorBox);
   }
 
+  validateBrowserErrors(message) {
+    cy.validateBrowserMessages(this.userErrorSelector, message);
+    cy.validateBrowserMessages(this.passErrorSelector, message);
+
+  }
 }
 export default new BasicLogin();

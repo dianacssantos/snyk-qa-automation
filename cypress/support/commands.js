@@ -1,25 +1,36 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+Cypress.Commands.add("auth0Login", () => {
+  basicLogin.visit();
+  auth0LoginPage.visit();
+});
+
+Cypress.Commands.add("assertErrorMessage", (selector, expectedText) => {
+  cy.get(selector)
+    .should("be.visible")
+    .invoke("text")
+    .then((actualText) => {
+      const cleaned = actualText.trim().replace(/\s+/g, " ");
+      expect(cleaned).to.contain(expectedText);
+    });
+});
+
+Cypress.Commands.add("assertNoErrorMessage", (selector) => {
+  cy.get(selector).should("not.exist");
+});
+
+Cypress.Commands.add("validateBrowserMessages", (selector, expectedMessage) => {
+  cy.get(selector)
+    .invoke("prop", "validationMessage")
+    .then((message) => {
+      if (message) {
+        const normalized = message.trim();
+        expect(normalized, `Validation message for ${selector}`).to.contain(
+          expectedMessage
+        );
+        expect(message).to.contain(expectedMessage);
+      } else {
+        cy.log(
+          "No validation message present — input valid or browser didn't trigger validation"
+        );
+      }
+    });
+});

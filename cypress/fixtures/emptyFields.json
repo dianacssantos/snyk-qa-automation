@@ -1,0 +1,29 @@
+{
+  "emptyFields": [
+    {
+      "email": "",
+      "password": "",
+      "expectedMessage": "Please fill in"
+    },
+    {
+      "email": "thisemail@yahoo.com",
+      "password": "",
+      "expectedMessage": "Please fill in"
+    },
+    {
+      "email": "",
+      "password": "justPassword1!",
+      "expectedMessage": "Please fill in"
+    },
+    {
+      "email": "      ",
+      "password": "justPassword1!",
+      "expectedMessage": "Please fill in"
+    },
+    {
+      "email": "",
+      "password": "      ",
+      "expectedMessage": "Please fill in"
+    }
+  ]
+}
