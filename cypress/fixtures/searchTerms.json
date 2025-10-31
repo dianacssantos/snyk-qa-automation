@@ -1,0 +1,51 @@
+{
+  "partialSearchTerms": [
+    {
+      "name": "Lisa",
+      "expectedMatches": 4,
+      "description": "Common first name — should return 4 users"
+    },
+    {
+      "name": "a",
+      "expectedMatches": 45,
+      "description": "Single letter search — should return multiple users"
+    },
+    {
+      "name": "",
+      "expectedMatches": 50,
+      "description": "Empty search — should return all users"
+    },
+    {
+      "name": "Rodriguez",
+      "expectedMatches": 1,
+      "description": "Last name only — should return one user"
+    },
+    {
+      "name": "NotThere",
+      "expectedMatches": 0,
+      "description": "Non-existing term — should return zero users"
+    }
+  ],
+  "fullSearchTerms": [
+    {
+      "name": "Michael Mccall",
+      "expectedMatches": 1,
+      "description": "Full name — should return exactly 1 user"
+    },
+    {
+      "name": "Lisa Hawkins",
+      "expectedMatches": 1,
+      "description": "Full name — should return exactly 1 user"
+    },
+    {
+      "name": "",
+      "expectedMatches": 50,
+      "description": "Empty search — should return all users"
+    },
+    {
+      "name": "Non Existent",
+      "expectedMatches": 0,
+      "description": "Non-existing user — should return zero users"
+    }
+  ]
+}
