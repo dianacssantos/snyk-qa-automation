@@ -4,8 +4,6 @@ class BasicLogin {
     usernameInput: () => cy.get("#username"),
     passwordInput: () => cy.get("#password"),
     loginButton: () => cy.get('button[type="submit"]'),
-    captchaTextBox: () => cy.get("#captcha_value"),
-    captchaImg: () => cy.get("#captcha_img"),
     userProfileLink: () => cy.get("#userDropdown"),
     errorMessage: () => cy.get(".card.bg-danger.text-white.shadow"),
   };
@@ -43,12 +41,6 @@ class BasicLogin {
 
 
   submit() {
-    // if (username !== "") {
-    //   this.elements.usernameInput().type(username);
-    // }
-    // if (password !== "") {
-    //   this.elements.passwordInput().type(password);
-    // }
     this.elements.loginButton().click();
   }
 
