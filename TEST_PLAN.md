@@ -10,14 +10,17 @@
   - Each page in the application will have its own class containing **selectors** for UI elements and **methods** to perform actions. This structure improves readability, reusability, and maintainability of the tests.
 
   - **Test Data:**
-  - Credentials stored in `cypress/fixtures/credentials.json`
-  - Environment variables for sensitive data
-  - Dynamic data generation for search functionality tests
+  - Static data stored in `cypress/fixtures/*.json`
+  - Sensitive data (valid credentials) stored in `cypress.env.json`
 
 - **Setup & Teardown:**
-  - **Before each test:** Navigate to base URL and clear session
-  - **After each test:** Logout and clear authentication state
-  - **On test failure:** Automatic screenshots for debugging
+  - **Before each test:**  
+    - Navigate to the base URL
+    - Clear cookies, sessions, and local storage to ensure isolation  
+  - **After each test:** 
+    - Session is cleared with beforeEach, so no need for afterEach here
+  - **On test failure:** 
+    - Automatic screenshots for debugging
 
 - **Execution Strategy:**
   - Tests grouped by functionality (authentication, user management)
@@ -71,3 +74,31 @@
 | **USER-03** | Search existing user | 1. Access users list page<br>2. Identify existing user name from list<br>3. Enter full name in search field<br>4. Execute search | 1. Users list displayed with multiple users<br>2. Target user name identified<br>3. Search field populated with full name<br>4. Only matching user displayed, search results show exactly 1 record, user details maintained and correct |
 | **USER-04** | Search partial name | 1. Access users list page<br>2. Identify partial name fragment from existing users<br>3. Enter partial name in search field<br>4. Execute search | 1. Users list displayed<br>2. Partial name fragment identified<br>3. Search field populated with partial name<br>4. All users containing search term displayed, results count less than full list, each result contains search term in name field |
 | **USER-05** | Search no results | 1. Access users list page<br>2. Enter random string in search field<br>3. Execute search | 1. Users list displayed<br>2. Search field populated with random string<br>3. No users displayed in table |
+
+
+## 4. Notes
+
+Recommended improvements:
+
+### 4.1. Missing IDs, unique IDs and test-friendly selectors
+Stable and unique identifiers are essential for reliable automation, but many elements currently rely on generic CSS classe, or reused IDs. This makes selectors fragile and hard to maintain.
+**Recommendation:** Add dedicated attributes for automation (e.g., data-testid), and ensure IDs are unique per component or context.
+
+### 4.2. Duplicated login page structures
+The application provides multiple login options, like basic, 2FA, Email-based 2FA, or CAPTCHA (all implmemented as separate pages).
+This creates code duplication and extra effort to maintain separate Page Objects for the same interactions, being also more prone to inconsitencies and more confusing.
+**Recomendation:** Consolidate login functionality into a single, configurable component. 
+
+### 4.3. Inconsistent Validation and Error Message Structures
+Validation messages differ across login types — some rely on browser-native tooltips, others use Bootstrap alert boxes. This inconsistency makes assertion logic complex and less reliable.
+**Recommendation:** Introduce a reusable, standardized error component that wraps all validation and API-level errors in a consistent structure.
+
+### 4.4. External login options are inconsistent and confusing
+There are multiple options to login externally, on main login page we have Auth0 and Google, but only inside Auth0 authentication usign "Continue with Google" the user is really able to login with google account.
+This creates confusion and complicates end-to-end testing, as different entry points behave inconsistently.
+**Recommendation:** All external authentication should be gathered on the unified login page (mentioned on 4.2), and clearly remove or fix non-functional buttons.
+
+### 4.5. CAPTCHA should have a test-friendly bypass
+End-to-end automation can be difficult using CAPTCHA mechanisms, designed to prevent automation.
+**Recommendation:**  
+Provide a testing environment with disabled CAPTCHA, or user that don't require CAPTCHA verification.

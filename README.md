@@ -46,6 +46,11 @@ cd snyk-qa-automation
 ```bash
 npm install
 ```
+- Configure environment variables
+Copy the example environment file and update it with your credentials:
+```bash
+cp cypress.env.example.json cypress.env.json
+```
 - Run tests (Cypress GUI)
 ```bash
 npx cypress open
