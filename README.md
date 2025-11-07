@@ -15,11 +15,18 @@ snyk-qa-automation/
 │   │   │   └── login.cy.js                   # Login tests
 │   │   └── user-management/
 │   │       └── user-search.cy.js             # User management tests
-│   ├── fixtures/
-│   │   └── credentials.json                  # Test data
+│   ├── fixtures/                             # Test data
+│   │   ├── emptyFields.json
+│   │   ├── invalidEmails.json
+│   │   └── searchTerms.json      
 │   ├── pages/                                # Page Object Model files
-│   │   ├── loginPage.js
-│   │   └── userListPage.js
+│   │   ├── login/
+│   │       ├── homePage.js
+│   │       ├── basicLoginPage.js
+│   │       ├── 2FAEmailLoginPage.js
+│   │       └── auth0LoginPage.js
+│   │   └── userManagement
+│   │       └── usersPage.js
 │   └── support/
 │       ├── commands.js                       # Custom Cypress commands
 │       └── e2e.js                            # Test setup/config

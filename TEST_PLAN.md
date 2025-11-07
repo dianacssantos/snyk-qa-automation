@@ -5,80 +5,77 @@
 **Rationale:** Cypress was chosen for its fast setup, modern API, and excellent documentation. It enables reliable end-to-end UI testing and smooth integration with test data.
 
 ## High Level Test Strategy
-- **Test Structure: Page Object Model (POM)**
+**Test Structure: Page Object Model (POM)**
 
-  - Each page in the application will have its own class containing **selectors** for UI elements and **methods** to perform actions. This structure improves readability, reusability, and maintainability of the tests.
+Each page in the application will have its own class containing **selectors** for UI elements and **methods** to perform actions. This structure improves readability, reusability, and maintainability of the tests.
 
-  - **Test Data:**
-  - Static data stored in `cypress/fixtures/*.json`
-  - Sensitive data (valid credentials) stored in `cypress.env.json`
+**Test Data:**
 
-- **Setup & Teardown:**
-  - **Before each test:**  
-    - Navigate to the base URL
-    - Clear cookies, sessions, and local storage to ensure isolation  
-  - **After each test:** 
-    - Session is cleared with beforeEach, so no need for afterEach here
-  - **On test failure:** 
-    - Automatic screenshots for debugging
+- Static data stored in `cypress/fixtures/*.json`
+- Sensitive data (valid credentials) stored in `cypress.env.json`
 
-- **Execution Strategy:**
-  - Tests grouped by functionality (authentication, user management)
-  - Independent test execution
+**Setup & Teardown:**
+- **Before each test:** Login tests: Navigate to the homepage; User management tests: clear cookies, do a successfull login
+- **After each test:** Session is cleared with beforeEach, so no need for afterEach here
+- **On test failure:** Automatic screenshots for debugging
 
-## 3. Test Cases
+**Execution Strategy:** Tests grouped by functionality (login, user management) with independent test execution
 
-### Login Tests
-## Test Cases List
+## 3. High Level Test Cases
 
 ### Authentication Tests
 | ID | Test Case Description | Expected Result |
 |----|----------------------|----------------------|
-| AUTH-01 | Successful login with valid credentials | Redirected to users list page, user authenticated |
-| AUTH-02 | Login with invalid password | Error message shown 'Invalid username or password', remains on login page |
-| AUTH-03 | Login with non-registered username | Error message shown 'Invalid username or password' |
-| AUTH-04 | Login with empty fields | Validation messages shown, login prevented |
-| AUTH-05 | Invalid username format validation | Error messahe shown 'Enter a valid username', login prevented |
-| AUTH-06 | Session persistence after browser restart | User remains logged in, no re-authentication needed |
-
+| AUTH-01 | Successful login with valid credentials | Redirected to admin page, user authenticated |
+| AUTH-02 | Login with wrong password | Error message shows "Wrong email or password", user remains on login page |
+| AUTH-03 | Login with non-registered username/email | Error message shows "Wrong email or password", user remains on login page |
+| AUTH-04 | Login with empty fields | Validation messages are displayed "Please fill in" / "Please enter an email address" / "Password is required", login prevented |
+| AUTH-05 | Invalid email format validation | Error message is present, user remains on login page |
+| AUTH-06 | Session persists successfully on app reload | User logged in automatically, no login page displayed, no errors|
 
 ### User Listing / Search Tests
-| ID | Test Case | Description | Expected Result |
-|----|------------|--------------|-----------------|
-| U1 | User list loads | User list appears post-login | At least one user displayed |
-| U2 | Verify table columns headers | Validate the content of user details available | Check "Name", "Email" and "Role" are the fields available |
-| U3 | Search existing user | Search full name of an existing user | Matching user displayed along with his details|
-| U4 | Search partial | Partial name search | All containing names displayed |
-| U5 | Search no results | Search for random string | No results are displayed on table |
-
+| ID | Test Case Description | Expected Result |
+|----|--------------------------|-----------------|
+| USER-01 | User list loads after user clicks list users | At least one user displayed |
+| USER-02 | User searches an existing user with full name | Matching user displayed along with his details|
+| USER-03 | User searches an existing user with partial name | All containing names displayed |
+| USER-04 | User searches a non matching user | "No results" message should be displayed |
+| USER-05 | User clicks on search without specifing a name |  All user results are displayed on table |
 
 ## Test Cases Details
+## Authentication Tests: Detailed per Login Page
 
-### Authentication Tests
-
-| Test ID | Test Case | Steps | Expected Results |
-|---------|-----------|-------|------------------|
-| **AUTH-01** | Successful login with valid credentials | 1. Navigate to Cova-dev homepage<br>2. Click "Login!" button<br>3. Enter valid username<br>4. Enter valid password<br>5. Click "Login" button | 1. Page loads with login options visible<br>2. Redirected to login form with username/password fields<br>3. Username field populated<br>4. Password field populated (masked)<br>5. Redirected to users list page, correct user authenticated, no errors |
-| **AUTH-02** | Login with invalid password | 1. Navigate to Cova-dev homepage<br>2. Click "Login!" button<br>3. Enter valid username<br>4. Enter invalid password<br>5. Click "Login" button | 1. Homepage loads successfully<br>2. Login form displayed with input fields<br>3. Username field populated<br>4. Password field populated (masked)<br>5. Error message "Invalid username or password" displayed, remains on login page |
-| **AUTH-03** | Login with non-registered username | 1. Navigate to Cova-dev homepage<br>2. Click "Login!" button<br>3. Enter non-existent username<br>4. Enter any password<br>5. Click "Login" button | 1. Homepage loads successfully<br>2. Login form displayed<br>3. Username field populated<br>4. Password field populated<br>5. Error message "Invalid username or password" displayed |
-| **AUTH-04** | Login with empty fields | 1. Navigate to Cova-dev homepage<br>2. Click "Login!" button<br>3. Leave username field empty<br>4. Leave password field empty<br>5. Click "Login" button | 1. Homepage loads successfully<br>2. Login form displayed<br>3. Username field remains empty<br>4. Password field remains empty<br>5. Validation messages "Username is required" and "Password is required" displayed |
-| **AUTH-05** | Invalid username format validation | 1. Navigate to Cova-dev homepage<br>2. Click "Login!" button<br>3. Enter invalid username format<br>4. Enter any password<br>5. Click "Login" button | 1. Homepage loads successfully<br>2. Login form displayed<br>3. Invalid username format entered<br>4. Password field populated<br>5. Validation message "Enter a valid username" displayed, login prevented |
-| **AUTH-06** | Session persistence after browser restart | 1. Login successfully<br>2. Close browser completely<br>3. Reopen browser and navigate to app URL<br>4. Check current page | 1. User authenticated and on users list page<br>2. Browser session closed<br>3. Application reloaded in new session<br>4. User remains logged in, directly accesses users list page |
-
-### User Listing / Search Tests
-
-| Test ID | Test Case | Steps | Expected Results |
-|---------|-----------|-------|------------------|
-| **USER-01** | User list loads | 1. Login successfully<br>2. Navigate to users list page | 1. User authenticated<br>2. Users list/page loads completely, at least one user record displayed, no loading errors |
-| **USER-02** | Verify table columns headers | 1. Access users list page<br>2. Inspect table headers | 1. Users list displayed<br>2. "Name", "Email", and "Role" column headers displayed, all expected columns present |
-| **USER-03** | Search existing user | 1. Access users list page<br>2. Identify existing user name from list<br>3. Enter full name in search field<br>4. Execute search | 1. Users list displayed with multiple users<br>2. Target user name identified<br>3. Search field populated with full name<br>4. Only matching user displayed, search results show exactly 1 record, user details maintained and correct |
-| **USER-04** | Search partial name | 1. Access users list page<br>2. Identify partial name fragment from existing users<br>3. Enter partial name in search field<br>4. Execute search | 1. Users list displayed<br>2. Partial name fragment identified<br>3. Search field populated with partial name<br>4. All users containing search term displayed, results count less than full list, each result contains search term in name field |
-| **USER-05** | Search no results | 1. Access users list page<br>2. Enter random string in search field<br>3. Execute search | 1. Users list displayed<br>2. Search field populated with random string<br>3. No users displayed in table |
+| Test Case | Login Page | Steps | Expected Result |
+|------------|-------------|--------|-----------------|
+| **AUTH-01 Successful login with valid credentials** | **Login!** | 1. Navigate to homepage<br>2. Click "Login!" button<br>3. Enter a valid username and password<br>4. Click "Login" | Redirected to admin page, user authenticated successfully |
+|  | **Auth0** | 1. Navigate to homepage<br>2. Click "Login!" button<br>3. Click "Login with Auth0" button<br>3. Enter valid email and password<br>4. Click "Continue" | Redirected to admin page, user authenticated successfully |
+| **AUTH-02 Login with wrong password** | **Login!** | 1. Navigate to homepage<br>2. Click "Login!" button<br>3. Enter a valid username<br>4. Enter a wrong password<br>4. Click "Login" | Error message "Wrong username or password"; User remains on same page |
+|  | **Auth0** | 1. Navigate to homepage<br>2. Click "Login!" button<br>3. Click "Login with Auth0" button<br>4. Enter valid email<br>5. Enter a wrong password | Error message "Wrong username or password"; User remains on same page |
+| **AUTH-03 Login with non-registered username/email** | **Login!** | 1. Navigate to homepage<br>2. Click "Login!" button<br>3. Enter non-existent username<br>4. Enter any password<br>4. Click "Login" | Error message "Wrong username or password"; User remains on same page |
+|  | **Auth0** | 1. Navigate to homepage<br>2. Click "Login!" button<br>3. Click "Login with Auth0" button<br>4. Enter valid but non registered email<br>5. Enter any password<br>6. Click "Continue"  | Error message "Wrong username or password"; User remains on same page |
+|  | **Login 2FA Email** |  1. Navigate to homepage<br>2. Click "Login with 2FA using email!" button<br>3. Enter any valid(non registered) email<br>4. Enter any password<br>5. Click "Login" | Error message "Wrong username or password"; User remains on same page |
+| **AUTH-04 Login with empty fields Empty fields validation** | **Login!** |  1. Navigate to homepage<br>2. Click "Login!" button<br>3. Leave username and password blank<br>4. Click "Login" | Browser validation message "Please fill in this field" is displayed; User remains on same page |
+|  | **Auth0** | 1. Navigate to homepage<br>2. Click "Login!" button<br>3. Click "Login with Auth0" button<br>4. Leave both fields empty<br>5. Click "Continue" | Errors are displayed "Please enter an email address" and "Password is required"; User remains on same page |
+|  | **Login 2FA Email** |1. Navigate to homepage<br>2. Click "Login with 2FA using email!" button<br>3. Leave both fields empty<br>4. Click "Login" | Browser validation message "Please fill in this field" is displayed; User remains on same page |
+| **AUTH-05 Invalid email format validation** | **Auth0** | 1. Navigate to homepage<br>2. Click "Login!" button<br>3. Click "Login with Auth0" button<br>4. Enter malformed email<br>5. Enter any password<br>6. Click "Continue" | Error message "Wrong username or password"; User remains on same page |
+|  | **Login 2FA Email** | 1. Navigate to homepage<br>2. Click "Login with 2FA using email!" button<br>3. Enter malformed email<br>4. Enter any password<br>5. Click "Login" | Validation messages prevent login; User remains on same page |
+|
 
 
-## 4. Notes
+### User List and Search Tests
 
-Recommended improvements:
+| Test Case | Steps | Expected Results |
+|----------|--------|------------------|
+| **USER-01 User list loads after user clicks list users** | 1. With a logged in user click on List users | Users List page loads correctly and displays a table with at least one user record, with fields "Name", "Age", "Start Date" and "Salary" filled |
+| **USER-02 User searches an existing user with full name** | 1. With a logged in user click on List users<br>2. On search users box write an existing full name and click search icon| Table updates showing user(s) containing the exact searched full name, with its details filled|
+| **USER-03 User searches an existing user with partial name** | 1. With a logged in user click on List users<br> 2. On search users box write a partial name common to 1 or more existing users | Table updates showing user(s) containing that partial name, with its details filled|
+| **USER-04 User searches a non matching user** | 1. With a logged in user click on List users<br> On search users box write a random name | Table becomes empty with no results, and should show "No results"|
+| **USER-05 User clicks on search without specifing a name** | 1. With a logged in user click on List users<br> 2. On search box click on search button | Table shows all users|
+|
+|
+
+# 4. Notes
+## Improvements that can be done:
 
 ### 4.1. Missing IDs, unique IDs and test-friendly selectors
 Stable and unique identifiers are essential for reliable automation, but many elements currently rely on generic CSS classe, or reused IDs. This makes selectors fragile and hard to maintain.
