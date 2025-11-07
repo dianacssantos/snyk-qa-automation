@@ -49,18 +49,14 @@ Each page in the application will have its own class containing **selectors** fo
 |------------|-------------|--------|-----------------|
 | **AUTH-01 Successful login with valid credentials** | **Login!** | 1. Navigate to homepage<br>2. Click "Login!" button<br>3. Enter a valid username and password<br>4. Click "Login" | Redirected to admin page, user authenticated successfully |
 |  | **Auth0** | 1. Navigate to homepage<br>2. Click "Login!" button<br>3. Click "Login with Auth0" button<br>3. Enter valid email and password<br>4. Click "Continue" | Redirected to admin page, user authenticated successfully |
-|
 | **AUTH-02 Login with wrong password** | **Login!** | 1. Navigate to homepage<br>2. Click "Login!" button<br>3. Enter a valid username<br>4. Enter a wrong password<br>4. Click "Login" | Error message "Wrong username or password"; User remains on same page |
 |  | **Auth0** | 1. Navigate to homepage<br>2. Click "Login!" button<br>3. Click "Login with Auth0" button<br>4. Enter valid email<br>5. Enter a wrong password | Error message "Wrong username or password"; User remains on same page |
-|
 | **AUTH-03 Login with non-registered username/email** | **Login!** | 1. Navigate to homepage<br>2. Click "Login!" button<br>3. Enter non-existent username<br>4. Enter any password<br>4. Click "Login" | Error message "Wrong username or password"; User remains on same page |
 |  | **Auth0** | 1. Navigate to homepage<br>2. Click "Login!" button<br>3. Click "Login with Auth0" button<br>4. Enter valid but non registered email<br>5. Enter any password<br>6. Click "Continue"  | Error message "Wrong username or password"; User remains on same page |
 |  | **Login 2FA Email** |  1. Navigate to homepage<br>2. Click "Login with 2FA using email!" button<br>3. Enter any valid(non registered) email<br>4. Enter any password<br>5. Click "Login" | Error message "Wrong username or password"; User remains on same page |
-|
 | **AUTH-04 Login with empty fields Empty fields validation** | **Login!** |  1. Navigate to homepage<br>2. Click "Login!" button<br>3. Leave username and password blank<br>4. Click "Login" | Browser validation message "Please fill in this field" is displayed; User remains on same page |
 |  | **Auth0** | 1. Navigate to homepage<br>2. Click "Login!" button<br>3. Click "Login with Auth0" button<br>4. Leave both fields empty<br>5. Click "Continue" | Errors are displayed "Please enter an email address" and "Password is required"; User remains on same page |
 |  | **Login 2FA Email** |1. Navigate to homepage<br>2. Click "Login with 2FA using email!" button<br>3. Leave both fields empty<br>4. Click "Login" | Browser validation message "Please fill in this field" is displayed; User remains on same page |
-|
 | **AUTH-05 Invalid email format validation** | **Auth0** | 1. Navigate to homepage<br>2. Click "Login!" button<br>3. Click "Login with Auth0" button<br>4. Enter malformed email<br>5. Enter any password<br>6. Click "Continue" | Error message "Wrong username or password"; User remains on same page |
 |  | **Login 2FA Email** | 1. Navigate to homepage<br>2. Click "Login with 2FA using email!" button<br>3. Enter malformed email<br>4. Enter any password<br>5. Click "Login" | Validation messages prevent login; User remains on same page |
 |
