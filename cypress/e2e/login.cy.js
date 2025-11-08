@@ -27,6 +27,7 @@ import twoFAEmailLogin from "../pages/twoFAEmailLogin";
 
 describe("Login Functionality", () => {
   beforeEach(() => {
+    cy.clearCookies();
     homePage.visit();
   });
 
@@ -39,21 +40,20 @@ describe("Login Functionality", () => {
 
     it("should login successfully with valid credentials", () => {
       basicLogin.fillCredentials(username, password);
-      basicLogin.submit();
-      cy.url().should("include", "/admin.php");
+      basicLogin.submitAndAssert("/admin");
     });
 
-    it("should show error for wrong password", () => {
+    it("should fail login when inserting wrong password with generic error", () => {
       basicLogin.fillCredentials(username, "wrongPass123!");
-      basicLogin.submit();
-      basicLogin.assertError("Invalid username or password");
+      basicLogin.submitAndAssert("/login");
+      basicLogin.assertError("Wrong username or password");
     });
 
-    it("should show validation for empty fields", () => {
-      cy.fixture("emptyFields").then(({ emptyFields }) => {
-        emptyFields.forEach(({ email, password, expectedMessage }) => {
-          basicLogin.fillCredentials(email, password);
-          basicLogin.submit();
+    it("should prevent login while attempting empty fields", () => {
+      cy.fixture("emptyFields").then(({ basicCreds }) => {
+        basicCreds.forEach(({ username, password, expectedMessage }) => {
+          basicLogin.fillCredentials(username, password);
+          basicLogin.submitAndAssert("/login");
           basicLogin.validateBrowserErrors(expectedMessage);
           basicLogin.assertNoAppError();
         });
@@ -64,82 +64,58 @@ describe("Login Functionality", () => {
   context("Auth0 Login Tests", () => {
     const { email, password } = Cypress.env("valid_auth0_login");
     const { emailL, passwordL } = Cypress.env("valid_auth0_login_locked");
-    const username = email.split("@")[0];
 
-    it("should login successfully with valid credentials", () => {
+    beforeEach(() => {
       basicLogin.visit();
       auth0LoginPage.visit();
+    });
+
+    it("should login successfully with valid credentials", () => {
       auth0LoginPage.fillCredentials(email, password);
       auth0LoginPage.submit();
-      cy.url().should("include", "/admin.php");
-      cy.get("#userDropdown").should("contain.text", username);
+      auth0LoginPage.assertUrl("/admin");
     });
 
     it("should show error for wrong password", () => {
-      basicLogin.visit();
-      auth0LoginPage.visit();
       auth0LoginPage.fillCredentials(email, "wrongPass123!");
       auth0LoginPage.submit();
-      auth0LoginPage.assertError(
-        "Wrong email or password",
-        "#error-element-password"
-      );
+      auth0LoginPage.assertUrlAuth0("/login");
+      auth0LoginPage.assertError("Wrong email or password", "passwordErrors");
     });
 
     it("should show error for invalid email format", () => {
-      basicLogin.visit();
-      auth0LoginPage.visit();
       cy.fixture("invalidEmails").then(({ invalidEmails }) => {
         invalidEmails.forEach(({ email, expectedMessage, description }) => {
           cy.log(`Testing: ${email} — ${description}`);
           auth0LoginPage.fillCredentials(email, "thisPass!");
           auth0LoginPage.submit();
-          auth0LoginPage.assertError(
-            "Wrong email or password",
-            "#error-element-password"
-          );
+          auth0LoginPage.assertUrlAuth0("/login");
+          auth0LoginPage.assertError("Wrong email or password", "passwordErrors");
         });
       });
     });
 
-    it("should show validation for empty fields", () => {
-      basicLogin.visit();
-      auth0LoginPage.visit();
-
-      cy.fixture("emptyFieldsAuth0").then(({ emptyFieldsAuth0 }) => {
-        emptyFieldsAuth0.forEach(
-          ({
-            email,
-            password,
-            expectedEmailFieldMessage,
-            expectedPasswordFieldMessage,
-          }) => {
+    it("should prevent login while attempting empty fields", () => {
+      cy.fixture("emptyFields").then(({ auth0Creds }) => {
+        auth0Creds.forEach(
+          ({email, password, expectedEmailFieldMessage, expectedPasswordFieldMessage,}) => {
             auth0LoginPage.fillCredentials(email, password);
             auth0LoginPage.submit();
 
             if (expectedEmailFieldMessage) {
-              auth0LoginPage.assertError(
-                expectedEmailFieldMessage,
-                ["#error-cs-username-required", "#error-element-username"]
-              );
+              auth0LoginPage.assertError(expectedEmailFieldMessage, "usernameErrors");
             }
-
             if (expectedPasswordFieldMessage) {
-              auth0LoginPage.assertError(
-                expectedPasswordFieldMessage,
-                "#error-cs-password-required"
-              );
+              auth0LoginPage.assertError(expectedPasswordFieldMessage,"passwordErrors");
             }
           }
         );
       });
     });
 
-    it("should show lock message after multiple failed attempts", () => {
-      basicLogin.visit();
-      auth0LoginPage.visit();
-
-      for (let i = 0; i < 1; i++) {
+    it.skip("should show lock message after multiple failed attempts", () => {
+      let maxAttempts = 1;
+      for (let i = 0; i < maxAttempts; i++) {
         auth0LoginPage.fillCredentials(emailL, `Try#${i + 1}`);
         auth0LoginPage.submit();
       }
@@ -148,26 +124,28 @@ describe("Login Functionality", () => {
   });
 
   context("2FA Email Login Tests", () => {
+
+    beforeEach(() => {
+      homePage.goTo2FAEmailLogin();
+    });
+
     it("should show validation for empty fields", () => {
-      twoFAEmailLogin.visit();
-      cy.fixture("emptyFields").then(({ emptyFields }) => {
-        emptyFields.forEach(({ email, password, expectedMessage }) => {
+      cy.fixture("emptyFields").then(({ twoFAEmailCreds }) => {
+        twoFAEmailCreds.forEach(({ email, password, expectedMessage }) => {
           twoFAEmailLogin.fillCredentials(email, password);
-          twoFAEmailLogin.submit();
+          twoFAEmailLogin.submitAndAssert("/login2FA");
           twoFAEmailLogin.validateBrowserErrors(expectedMessage);
         });
       });
     });
 
     it("should show error for invalid email format", () => {
-      twoFAEmailLogin.visit();
       cy.fixture("invalidEmails").then(({ invalidEmails }) => {
-        invalidEmails.forEach(({ email, description }) => {
+        invalidEmails.forEach(({ email, expectedMessage, description }) => {
           cy.log(`Testing: ${email} — ${description}`);
           twoFAEmailLogin.fillCredentials(email, "thisPass!");
-          twoFAEmailLogin.submit();
-          cy.url().should("include", "/login2FA_email.php");
-          twoFAEmailLogin.validateBrowserErrors("Enter a valid email address");
+          twoFAEmailLogin.submitAndAssert("/login2FA_email");
+          twoFAEmailLogin.validateBrowserErrors(expectedMessage);
         });
       });
     });

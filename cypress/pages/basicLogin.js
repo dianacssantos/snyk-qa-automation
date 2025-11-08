@@ -40,8 +40,9 @@ class BasicLogin {
   }
 
 
-  submit() {
+  submitAndAssert(expectedUrl) {
     this.elements.loginButton().click();
+    cy.assertUrlIncludes(expectedUrl);
   }
 
   assertError(message) {

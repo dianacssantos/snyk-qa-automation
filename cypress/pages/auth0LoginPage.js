@@ -1,98 +1,106 @@
 class Auth0LoginPage {
   auth0Origin = "https://dev-r2c3iyx2vbmmovdt.us.auth0.com";
-  errorMessage = "#error-element-password"; 
-  continueButton = 'button[type="submit"][name="action"]';
-  blockedMessage = "#prompt-alert";
-  emailInput = "#username";
 
-
-  elements = {
-    enterLogin: () => cy.get("#login-auth0"),
-    emailInput: () => cy.get("#username"),
-    passwordInput: () => cy.get("#password"),
-    showPasswordButton: () => cy.get('button[data-action="toggle"]'),
-    continueButton: () => cy.get('button[type="submit"][name="action"]'),
-    emptyEmailErrorMessage: () => cy.get("#error-cs-username-required"),
-    emptyPassErrorMessage: () => cy.get("#error-cs-password-required"),
-  //  googleButton: () => cy.contains("Continue with Google"),
+  selectors = {
+    enterLogin: "#login-auth0",
+    emailInput: "#username",
+    passwordInput: "#password",
+    showPasswordButton: 'button[data-action="toggle"]',
+    continueButton: 'button[type="submit"][name="action"]',
+    usernameErrors: ["#error-cs-username-required", "#error-element-username"],
+    passwordErrors: ["#error-cs-password-required", "#error-element-password"],
+    blockedMessage: "#prompt-alert",
+    blockedAccount: "[role='alert'], .ulp-text",
   };
 
   visit() {
-    this.elements.enterLogin().click();
+    cy.get(this.selectors.enterLogin).click();
   }
 
   validateEmptyFields() {
-    this.elements.continueButton().click();
-    this.elements.emailInput().then(($input) => {
+    cy.get(this.selectors.continueButton).click();
+    cy.get(this.selectors.emailInput).then(($input) => {
       expect($input[0].validationMessage).to.contain("Please fill in");
     });
-    this.elements.passwordInput().then(($input) => {
+    cy.get(this.selectors.passwordInput).then(($input) => {
       expect($input[0].validationMessage).to.contain("Please fill in");
     });
   }
 
   fillCredentials(email, password) {
     cy.origin(
-      "https://dev-r2c3iyx2vbmmovdt.us.auth0.com",
+      this.auth0Origin,
       { args: { email, password } },
       ({ email, password }) => {
         cy.get("#username").clear();
         cy.get("#password").clear();
 
-        if (email) cy.get("#username").type(email);;
+        if (email) cy.get("#username").type(email);
         if (password) {
           cy.get("#password").type(password);
-          cy.get('button[data-action="toggle"]').click(); 
+          cy.get('button[data-action="toggle"]').click();
         }
       }
     );
     return this;
   }
+  assertUrl(expectedUrl) {
+    cy.location("pathname", { timeout: 10000 }).should("include", expectedUrl);
+  }
+
+  assertUrlAuth0(expectedUrl) {
+    cy.origin(this.auth0Origin, { args: { url: expectedUrl } }, ({ url }) => {
+      cy.location("pathname", { timeout: 10000 }).should("include", url);
+    });
+  }
 
   submit() {
     cy.origin(
       this.auth0Origin,
-      { args: { selector: this.continueButton } },
+      { args: { selector: this.selectors.continueButton } },
       ({ selector }) => {
         cy.get(selector).click();
       }
     );
   }
 
-  assertError(message, selectors) {
+  assertUrl(expectedUrl) {
+    cy.location("pathname", { timeout: 10000 }).should("include", expectedUrl);
+  }
+
+  assertUrl(expectedUrl) {
+    cy.location("pathname", { timeout: 10000 }).should("include", expectedUrl);
+  }
+  assertError(message, selectorType) {
+    const selectors = this.selectors[selectorType] || selectorType;
+    
     cy.origin(
       this.auth0Origin,
       { args: { message, selectors } },
       ({ message, selectors }) => {
-        const selectorQuery = Array.isArray(selectors)
-          ? selectors.join(", ")
-          : selectors;
-  
-        cy.get(selectorQuery, { timeout: 10000 })
-          .should("be.visible")
-          .invoke("text")
-          .then((actualText) => {
-            const cleaned = actualText.trim().replace(/\s+/g, " ");
-            expect(cleaned).to.contain(message);
-          });
+        const selectorArray = Array.isArray(selectors) ? selectors : [selectors];
+        const combinedSelector = selectorArray.join(', ');
+        
+        cy.get(combinedSelector, { timeout: 10000 })
+          .filter(':visible')
+          .first()
+          .should('be.visible')
+          .and('contain.text', message);
       }
     );
   }
-  
 
   assertBlockedAccount(message) {
     cy.origin(
       this.auth0Origin,
       { args: { selector: this.blockedMessage, message } },
-      ({ selector, message}) => {
-        cy.get(selector)
-          .should("be.visible")
-          .and("contain.text", message);
+      ({ selector, message }) => {
+        cy.get(selector).should("be.visible").and("contain.text", message);
       }
     );
   }
 
-  // TODO: login with Google 
+  // TODO: login with Google
 
   // loginWithGoogle() {
   //   this.elements.googleButton().click();
@@ -100,6 +108,5 @@ class Auth0LoginPage {
   //   return new AdminPage();
   // }
 }
-
 
 export default new Auth0LoginPage();
