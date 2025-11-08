@@ -17,16 +17,6 @@ class Auth0LoginPage {
     cy.get(this.selectors.enterLogin).click();
   }
 
-  validateEmptyFields() {
-    cy.get(this.selectors.continueButton).click();
-    cy.get(this.selectors.emailInput).then(($input) => {
-      expect($input[0].validationMessage).to.contain("Please fill in");
-    });
-    cy.get(this.selectors.passwordInput).then(($input) => {
-      expect($input[0].validationMessage).to.contain("Please fill in");
-    });
-  }
-
   fillCredentials(email, password) {
     cy.origin(
       this.auth0Origin,
@@ -44,15 +34,6 @@ class Auth0LoginPage {
     );
     return this;
   }
-  assertUrl(expectedUrl) {
-    cy.location("pathname", { timeout: 10000 }).should("include", expectedUrl);
-  }
-
-  assertUrlAuth0(expectedUrl) {
-    cy.origin(this.auth0Origin, { args: { url: expectedUrl } }, ({ url }) => {
-      cy.location("pathname", { timeout: 10000 }).should("include", url);
-    });
-  }
 
   submit() {
     cy.origin(
@@ -68,9 +49,12 @@ class Auth0LoginPage {
     cy.location("pathname", { timeout: 10000 }).should("include", expectedUrl);
   }
 
-  assertUrl(expectedUrl) {
-    cy.location("pathname", { timeout: 10000 }).should("include", expectedUrl);
+  assertUrlAuth0(expectedUrl) {
+    cy.origin(this.auth0Origin, { args: { url: expectedUrl } }, ({ url }) => {
+      cy.location("pathname", { timeout: 10000 }).should("include", url);
+    });
   }
+
   assertError(message, selectorType) {
     const selectors = this.selectors[selectorType] || selectorType;
     

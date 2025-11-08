@@ -19,16 +19,6 @@ class TwoFAEmailLogin {
     this.elements.userProfileLink().click();
   }
 
-  validateEmptyFields() {
-    this.elements.loginButton().click();
-    this.elements.emailInput().then(($input) => {
-      expect($input[0].validationMessage).to.contain("Please fill in");
-    });
-    this.elements.passwordInput().then(($input) => {
-      expect($input[0].validationMessage).to.contain("Please fill in");
-    });
-  }
-
   fillCredentials(email, password) {
     const cleanedEmailBox = this.elements.emailInput().clear();
     const cleanedPasswordBox = this.elements.passwordInput().clear();
@@ -38,7 +28,7 @@ class TwoFAEmailLogin {
     return this;
   }
 
-  submitAndAssert(expectedUrl) {
+  submitAndAssertUrl(expectedUrl) {
     this.elements.loginButton().click();
     cy.assertUrlIncludes(expectedUrl);
   }
