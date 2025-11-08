@@ -7,6 +7,12 @@ Cypress.Commands.add("assertUrlIncludes", (expectedPath) => {
   cy.location("pathname").should("include", expectedPath);
 });
 
+Cypress.Commands.add('validateUserLoggedIn', (username) => {
+  cy.get('#userDropdown')
+    .should('be.visible')
+    .and('contain.text', username);
+});
+
 Cypress.Commands.add("assertErrorMessage", (selector, expectedText) => {
   cy.get(selector)
     .should("be.visible")

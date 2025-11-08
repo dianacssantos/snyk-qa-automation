@@ -42,6 +42,7 @@ describe("Login Functionality", () => {
     it("should login successfully with valid credentials", () => {
       basicLogin.fillCredentials(username, password);
       basicLogin.submitAndAssertUrl("/admin");
+      cy.validateUserLoggedIn(username);
     });
 
     it("should fail login when inserting wrong password with generic error", () => {
@@ -65,6 +66,7 @@ describe("Login Functionality", () => {
   context("Auth0 Login Tests", () => {
     const { email, password } = Cypress.env("valid_auth0_login");
     const { emailL, passwordL } = Cypress.env("valid_auth0_login_locked");
+    const username = email.split("@")[0];
 
     beforeEach(() => {
       basicLogin.visit();
@@ -75,6 +77,7 @@ describe("Login Functionality", () => {
       auth0LoginPage.fillCredentials(email, password);
       auth0LoginPage.submit();
       auth0LoginPage.assertUrl("/admin");
+      cy.validateUserLoggedIn(username);
     });
 
     it("should show error for wrong password", () => {
