@@ -52,8 +52,3 @@ Cypress.Commands.add("validateBrowserMessages", (selector, expectedMessage) => {
       }
     });
 });
-
-function generateFakeFullName() {
-  const randomLetters = () => Math.random().toString(36).substring(2, 7).toUpperCase();
-  return `${randomLetters()} ${randomLetters()}`;
-}
