@@ -3,13 +3,17 @@ Cypress.Commands.add("auth0Login", () => {
   auth0LoginPage.visit();
 });
 
+Cypress.Commands.add("assertUrlIncludes", (expectedPath) => {
+  cy.location("pathname").should("include", expectedPath);
+});
+
 Cypress.Commands.add("assertErrorMessage", (selector, expectedText) => {
   cy.get(selector)
     .should("be.visible")
     .invoke("text")
     .then((actualText) => {
       const cleaned = actualText.trim().replace(/\s+/g, " ");
-      expect(cleaned).to.contain(expectedText);
+      expect(cleaned).to.eq(expectedText);
     });
 });
 
@@ -26,7 +30,6 @@ Cypress.Commands.add("validateBrowserMessages", (selector, expectedMessage) => {
         expect(normalized, `Validation message for ${selector}`).to.contain(
           expectedMessage
         );
-        expect(message).to.contain(expectedMessage);
       } else {
         cy.log(
           "No validation message present — input valid or browser didn't trigger validation"

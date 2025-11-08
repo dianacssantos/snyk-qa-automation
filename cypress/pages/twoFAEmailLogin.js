@@ -38,14 +38,9 @@ class TwoFAEmailLogin {
     return this;
   }
 
-  submit(username, password) {
-    // if (username !== "") {
-    //   this.elements.usernameInput().type(username);
-    // }
-    // if (password !== "") {
-    //   this.elements.passwordInput().type(password);
-    // }
+  submitAndAssert(expectedUrl) {
     this.elements.loginButton().click();
+    cy.assertUrlIncludes(expectedUrl);
   }
 
   assertError(message) {
