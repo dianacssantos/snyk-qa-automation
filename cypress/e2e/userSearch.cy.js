@@ -2,6 +2,16 @@ import homePage from "../pages/homePage";
 import basicLogin from "../pages/basicLogin";
 import usersPage from "../pages/usersPage";
 
+/**
+ * This test suite intends to user management tests:
+1. User List Display:
+○ List users work properly (users loaded, expected fields present)
+
+2. Search Functionality 
+○ Results are as expected for existing users (search full or partial)
+○ Results are as expected for non existing users, or empty searches
+ */
+
 describe("User List and Search Functionality", () => {
   const { username, password } = Cypress.env("valid_basic_login");
 
