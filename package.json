@@ -17,7 +17,7 @@
     "url": "https://github.com/dianacssantos/snyk-qa-automation/issues"
   },
   "homepage": "https://github.com/dianacssantos/snyk-qa-automation#readme",
-  "devDependencies": {
+  "devDependencies": {  
     "cypress": "^14.5.4",
     "mochawesome": "^7.1.4",
     "mochawesome-merge": "^5.0.0",
