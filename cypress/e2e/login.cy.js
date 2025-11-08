@@ -28,6 +28,7 @@ import twoFAEmailLogin from "../pages/twoFAEmailLogin";
 describe("Login Functionality", () => {
   beforeEach(() => {
     cy.clearCookies();
+    cy.clearLocalStorage();
     homePage.visit();
   });
 
@@ -40,12 +41,12 @@ describe("Login Functionality", () => {
 
     it("should login successfully with valid credentials", () => {
       basicLogin.fillCredentials(username, password);
-      basicLogin.submitAndAssert("/admin");
+      basicLogin.submitAndAssertUrl("/admin");
     });
 
     it("should fail login when inserting wrong password with generic error", () => {
       basicLogin.fillCredentials(username, "wrongPass123!");
-      basicLogin.submitAndAssert("/login");
+      basicLogin.submitAndAssertUrl("/login");
       basicLogin.assertError("Wrong username or password");
     });
 
@@ -53,7 +54,7 @@ describe("Login Functionality", () => {
       cy.fixture("emptyFields").then(({ basicCreds }) => {
         basicCreds.forEach(({ username, password, expectedMessage }) => {
           basicLogin.fillCredentials(username, password);
-          basicLogin.submitAndAssert("/login");
+          basicLogin.submitAndAssertUrl("/login");
           basicLogin.validateBrowserErrors(expectedMessage);
           basicLogin.assertNoAppError();
         });
@@ -133,7 +134,7 @@ describe("Login Functionality", () => {
       cy.fixture("emptyFields").then(({ twoFAEmailCreds }) => {
         twoFAEmailCreds.forEach(({ email, password, expectedMessage }) => {
           twoFAEmailLogin.fillCredentials(email, password);
-          twoFAEmailLogin.submitAndAssert("/login2FA");
+          twoFAEmailLogin.submitAndAssertUrl("/login2FA");
           twoFAEmailLogin.validateBrowserErrors(expectedMessage);
         });
       });
@@ -144,7 +145,7 @@ describe("Login Functionality", () => {
         invalidEmails.forEach(({ email, expectedMessage, description }) => {
           cy.log(`Testing: ${email} — ${description}`);
           twoFAEmailLogin.fillCredentials(email, "thisPass!");
-          twoFAEmailLogin.submitAndAssert("/login2FA_email");
+          twoFAEmailLogin.submitAndAssertUrl("/login2FA_email");
           twoFAEmailLogin.validateBrowserErrors(expectedMessage);
         });
       });

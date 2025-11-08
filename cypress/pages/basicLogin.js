@@ -9,8 +9,8 @@ class BasicLogin {
   };
 
   errorBox = ".card.bg-danger";
-  userErrorSelector  = "#username"
-  passErrorSelector  = "#password"
+  userErrorSelector = "#username";
+  passErrorSelector = "#password";
 
   visit() {
     this.elements.enterLogin().click();
@@ -18,16 +18,6 @@ class BasicLogin {
 
   getUserProfile() {
     this.elements.userProfileLink().click();
-  }
-
-  validateEmptyFields() {
-    this.elements.loginButton().click();
-    this.elements.usernameInput().then(($input) => {
-      expect($input[0].validationMessage).to.contain("Please fill in");
-    });
-    this.elements.passwordInput().then(($input) => {
-      expect($input[0].validationMessage).to.contain("Please fill in");
-    });
   }
 
   fillCredentials(username, password) {
@@ -39,8 +29,7 @@ class BasicLogin {
     return this;
   }
 
-
-  submitAndAssert(expectedUrl) {
+  submitAndAssertUrl(expectedUrl) {
     this.elements.loginButton().click();
     cy.assertUrlIncludes(expectedUrl);
   }
@@ -56,7 +45,6 @@ class BasicLogin {
   validateBrowserErrors(message) {
     cy.validateBrowserMessages(this.userErrorSelector, message);
     cy.validateBrowserMessages(this.passErrorSelector, message);
-
   }
 }
 export default new BasicLogin();
