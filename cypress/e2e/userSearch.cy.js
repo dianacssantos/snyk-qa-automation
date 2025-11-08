@@ -16,15 +16,10 @@ describe("User List and Search Functionality", () => {
   const { username, password } = Cypress.env("valid_basic_login");
 
   beforeEach(() => {
-    cy.clearCookies();
-    homePage.visit();
-    homePage.goToBasicLogin();
-    basicLogin.fillCredentials(username, password);
-    basicLogin.submit();
-    usersPage.listUsers();
-    cy.url().should("include", "/list_users.php");
+    cy.loginBasic(username, password);
+    usersPage.listUsersAndAssert("list_users");
   });
-  
+
   context("User List Display", () => {
     it("should display user list with correct user details", () => {
       usersPage.countRows().then((count) => {
@@ -43,12 +38,7 @@ describe("User List and Search Functionality", () => {
 
           usersPage.searchUser(name);
           usersPage.verifySearchResultText(name);
-
-          cy.url().then((url) => {
-            const normalizedUrl = decodeURIComponent(url).replace(/\+/g, " ");
-            expect(normalizedUrl).to.include(`/list_users.php?search=${name}`);
-          });
-
+          usersPage.verifySearchUrl(name);
           usersPage.verifySearchResults(name, true, expectedMatches);
         });
       });
@@ -60,25 +50,19 @@ describe("User List and Search Functionality", () => {
           cy.log(`🔍 [Partial Search] "${name}" — ${description}`);
 
           usersPage.searchUser(name);
-
-          cy.url().then((url) => {
-            const normalizedUrl = decodeURIComponent(url).replace(/\+/g, " ");
-            expect(normalizedUrl).to.include(`/list_users.php?search=${name}`);
-          });
-
+          usersPage.verifySearchResultText(name);
+          usersPage.verifySearchUrl(name);
           usersPage.verifySearchResults(name, false, expectedMatches);
         });
       });
     });
 
     it("should display 'no results' message when no users match search", () => {
-      const randomName = "xyzRandomName123";
-
+      const randomName = usersPage.generateFakeFullName();
       usersPage.searchUser(randomName);
-      cy.url().should("include", `/list_users.php?search=${randomName}`);
-
+      usersPage.verifySearchUrl(randomName);
       usersPage.verifySearchResults(randomName, false, 0);
-      cy.contains(/no results|no users|not found/i).should("be.visible");
+      usersPage.assertNoResultsMessage();
     });
   });
 });

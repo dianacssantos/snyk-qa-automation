@@ -1,3 +1,14 @@
+Cypress.Commands.add("loginBasic", (username, password) => {
+  cy.session([username, password], () => {
+    cy.visit("/login.php");
+    cy.get("#username").type(username);
+    cy.get("#password").type(password);
+    cy.get('button[type="submit"]').click();
+    cy.url().should("include", "/admin");
+  });
+  cy.visit("/admin.php");
+});
+
 Cypress.Commands.add("auth0Login", () => {
   basicLogin.visit();
   auth0LoginPage.visit();
@@ -7,10 +18,8 @@ Cypress.Commands.add("assertUrlIncludes", (expectedPath) => {
   cy.location("pathname").should("include", expectedPath);
 });
 
-Cypress.Commands.add('validateUserLoggedIn', (username) => {
-  cy.get('#userDropdown')
-    .should('be.visible')
-    .and('contain.text', username);
+Cypress.Commands.add("validateUserLoggedIn", (username) => {
+  cy.get("#userDropdown").should("be.visible").and("contain.text", username);
 });
 
 Cypress.Commands.add("assertErrorMessage", (selector, expectedText) => {
@@ -43,3 +52,8 @@ Cypress.Commands.add("validateBrowserMessages", (selector, expectedMessage) => {
       }
     });
 });
+
+function generateFakeFullName() {
+  const randomLetters = () => Math.random().toString(36).substring(2, 7).toUpperCase();
+  return `${randomLetters()} ${randomLetters()}`;
+}

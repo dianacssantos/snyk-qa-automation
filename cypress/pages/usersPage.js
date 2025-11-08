@@ -2,7 +2,8 @@ class UsersPage {
   elements = {
     listUsersMenu: () => cy.contains("a.nav-link", "List Users"),
     listUsersTitle: () => cy.contains("#admin_page"),
-    searchTextbox: () => cy.get('form.d-none.d-sm-inline-block input[name="search"]'),
+    searchTextbox: () =>
+      cy.get('form.d-none.d-sm-inline-block input[name="search"]'),
     searchButton: () => cy.get('button.btn.btn-primary[type="submit"]'),
     usersTable: () => cy.get("#dataTable"),
     tableHeaders: () => cy.get("table thead th"),
@@ -10,8 +11,9 @@ class UsersPage {
     resultsText: () => cy.contains("p", "Search results for:"),
   };
 
-  listUsers() {
+  listUsersAndAssert() {
     this.elements.listUsersMenu().click();
+    cy.assertUrlIncludes("/list_users");
   }
 
   searchUser(name) {
@@ -54,7 +56,7 @@ class UsersPage {
 
   verifySearchResultText(term) {
     if (term.trim() === "") {
-      cy.log("Search results for: (empty term)");
+      cy.log("Search results for:");
       return;
     }
 
@@ -178,6 +180,21 @@ class UsersPage {
         );
       }
     });
+  }
+  verifySearchUrl(name) {
+    cy.url()
+      .then((url) => decodeURIComponent(url).replace(/\+/g, " "))
+      .should("include", `/list_users.php?search=${name}`);
+  }
+
+  assertNoResultsMessage() {
+    cy.contains(/no results|no users|not found/i).should("be.visible");
+  }
+
+  generateFakeFullName() {
+    const randomLetters = () =>
+      Math.random().toString(36).substring(2, 7).toUpperCase();
+    return `${randomLetters()} ${randomLetters()}`;
   }
 }
 export default new UsersPage();
