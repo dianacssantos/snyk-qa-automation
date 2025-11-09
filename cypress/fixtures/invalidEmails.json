@@ -1,0 +1,44 @@
+{
+  "invalidEmails": [
+    {
+      "email": "thisuserme",
+      "expectedMessage": "include an '@'" ,
+      "description": "Missing @ symbol test"
+    },
+    {
+      "email": "thisuserme@",
+      "expectedMessage": "enter a part following '@'",
+      "description": "Missing domain after @ test"
+    },
+    {
+      "email": "thisuserme@@domain",
+      "expectedMessage": "should not contain the symbol '@'",
+      "description": "Multiple @ test"
+    },
+    {
+      "email": "thisuserme@domain",
+      "expectedMessage": "include a '.'" ,
+      "description": "Missing top-level domain test"
+    },
+    {
+      "email": "thisuserme@domain.",
+      "expectedMessage": "wrong position",
+      "description": "Trailing dot test"
+    },
+    {
+      "email": "thisuserme@-domain",
+      "expectedMessage": "enter an email address",
+      "description": "Hyphen at domain start test"
+    },
+    {
+      "email": ".thisuserme@domain.com",
+      "expectedMessage": "enter an email address",
+      "description": "Leading dot in local part test"
+    },
+    {
+      "email": "this..erme@domain.com",
+      "expectedMessage": "enter an email address",
+      "description": "Consecutive dots in local part test"
+    }
+  ]
+}
