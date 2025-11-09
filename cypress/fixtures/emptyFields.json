@@ -1,0 +1,64 @@
+{
+  "basicCreds": [
+    {
+      "username": "",
+      "password": "",
+      "expectedMessage": "Please fill"
+    },
+    {
+      "username": "thisuser",
+      "password": "",
+      "expectedMessage": "Please fill"
+    },
+    {
+      "username": "",
+      "password": "justPassword1!",
+      "expectedMessage": "Please fill"
+    }
+  ],
+  "auth0Creds": [
+    {
+      "email": "",
+      "password": "",
+      "expectedEmailFieldMessage": "Please enter an email address",
+      "expectedPasswordFieldMessage": "Password is required"
+    },
+    {
+      "email": "thisemail@yahoo.com",
+      "password": "",
+      "expectedPasswordFieldMessage": "Password is required"
+    },
+    {
+      "email": "",
+      "password": "justPassword1!",
+      "expectedEmailFieldMessage": "Please enter an email address"
+    },
+    {
+      "email": "      ",
+      "password": "justPassword1!",
+      "expectedEmailFieldMessage": "Please enter an email address"
+    },
+    {
+      "email": "",
+      "password": "      ",
+      "expectedEmailFieldMessage": "Please enter an email address"
+    }
+  ],
+  "twoFAEmailCreds": [
+    {
+      "email": "",
+      "password": "",
+      "expectedMessage": "Please fill"
+    },
+    {
+      "email": "thisuser@gmail.com",
+      "password": "",
+      "expectedMessage": "Please fill"
+    },
+    {
+      "email": "",
+      "password": "justPassword1!",
+      "expectedMessage": "Please fill"
+    }
+  ]
+}
