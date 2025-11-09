@@ -40,7 +40,6 @@ Each page in the application will have its own class containing **selectors** fo
 | USER-02 | User searches an existing user with full name | Matching user displayed along with his details|
 | USER-03 | User searches an existing user with partial name | All containing names displayed |
 | USER-04 | User searches a non matching user | "No results" message should be displayed |
-| USER-05 | User clicks on search without specifing a name |  All user results are displayed on table |
 
 ## Test Cases Details
 ## Authentication Tests: Detailed per Login Page
@@ -70,8 +69,6 @@ Each page in the application will have its own class containing **selectors** fo
 | **USER-02 User searches an existing user with full name** | 1. With a logged in user click on List users<br>2. On search users box write an existing full name and click search icon| Table updates showing user(s) containing the exact searched full name, with its details filled|
 | **USER-03 User searches an existing user with partial name** | 1. With a logged in user click on List users<br> 2. On search users box write a partial name common to 1 or more existing users | Table updates showing user(s) containing that partial name, with its details filled|
 | **USER-04 User searches a non matching user** | 1. With a logged in user click on List users<br> On search users box write a random name | Table becomes empty with no results, and should show "No results"|
-| **USER-05 User clicks on search without specifing a name** | 1. With a logged in user click on List users<br> 2. On search box click on search button | Table shows all users|
-|
 |
 
 # 4. Notes
