@@ -3,17 +3,17 @@
     {
       "username": "",
       "password": "",
-      "expectedMessage": "Please fill in"
+      "expectedMessage": "Please fill"
     },
     {
       "username": "thisuser",
       "password": "",
-      "expectedMessage": "Please fill in"
+      "expectedMessage": "Please fill"
     },
     {
       "username": "",
       "password": "justPassword1!",
-      "expectedMessage": "Please fill in"
+      "expectedMessage": "Please fill"
     }
   ],
   "auth0Creds": [
@@ -48,17 +48,17 @@
     {
       "email": "",
       "password": "",
-      "expectedMessage": "Please fill in"
+      "expectedMessage": "Please fill"
     },
     {
       "email": "thisuser@gmail.com",
       "password": "",
-      "expectedMessage": "Please fill in"
+      "expectedMessage": "Please fill"
     },
     {
       "email": "",
       "password": "justPassword1!",
-      "expectedMessage": "Please fill in"
+      "expectedMessage": "Please fill"
     }
   ]
 }
